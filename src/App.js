@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { BrowserRouter, NavLink, Route,  } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
-let Router = BrowserRouter;
+import TransitionGroup from "react-transition-group/TransitionGroup";
 
+let Router = BrowserRouter;
 
 let Mug = (props) => {
   let mugInfo = props.mugInformation;
@@ -92,11 +93,12 @@ let MugPage = (props) => {
   } else {
     return (
       <NavLink to={"/mugs/:" + props.mugNumber}>
-        <div className="mug">
+        <div className="mug mugPage">
           <img src={mugInfo._embedded["wp:featuredmedia"][0].source_url} alt=""/>
           <h1>{mugInfo.title.rendered}</h1>
           <p>{mugInfo.content.rendered}</p>
           <a href={mugInfo.acf.link_to_mug}>Buy It Here!</a>
+        <NavLink to="/">Back</NavLink>          
         </div>
       </NavLink>
     ) 
