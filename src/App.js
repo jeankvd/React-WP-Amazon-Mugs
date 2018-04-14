@@ -49,6 +49,8 @@ class App extends Component {
     }
   }
 
+// test
+
 componentDidMount() {
   fetch("http://amazonmug.local/wp-json/wp/v2/mugs?_embed")
 	  .then(response => response.json())
