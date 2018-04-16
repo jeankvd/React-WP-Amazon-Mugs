@@ -60,3 +60,35 @@
     height: auto;
   }
 }
+
+.animated-page-wrapper {
+  position: absolute;
+  top: 62px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.fadeTranslate-enter {
+  opacity: 0;
+}
+
+.fadeTranslate-enter.fadeTranslate-enter-active {
+  opacity: 1;
+  transition: opacity 1000ms ease-in;
+}
+
+.fadeTranslate-exit {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.fadeTranslate-exit.fadeTranslate-exit-active {
+  opacity: 0;
+  transform: translate(0, 3vh);
+  transition: opacity 1000ms ease-in, transform 1000ms ease-in-out;
+}
+
+.fix-container {
+  position: fixed;
+}

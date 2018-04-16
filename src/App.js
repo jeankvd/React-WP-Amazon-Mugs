@@ -1,10 +1,24 @@
 import React, { Component } from 'react';
 import { BrowserRouter, NavLink, Route,  } from 'react-router-dom';
-import logo from './logo.svg';
 import './App.css';
-import TransitionGroup from "react-transition-group/TransitionGroup";
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 let Router = BrowserRouter;
+
+const PageFade = (props) => (
+  <CSSTransition 
+    {...props}
+    classNames="fadeTranslate"
+    timeout={1000}
+    mountOnEnter={true}
+    unmountOnExit={true}
+  />
+)
+
+const firstChild = props => {
+  const childrenArray = React.Children.toArray(props.children);
+  return childrenArray[0] || null;
+};
 
 let Mug = (props) => {
   let mugInfo = props.mugInformation;
@@ -84,6 +98,12 @@ componentDidMount() {
     );
   }
 }
+
+const BasicExample = () => (
+  <BrowserRouter>
+    <Route path="/" component={App} />
+  </BrowserRouter>
+);
 
 let MugPage = (props) => {
   let mugInfo = props.mugInformation;
