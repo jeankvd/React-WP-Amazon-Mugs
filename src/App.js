@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-import { BrowserRouter, NavLink, Route,  } from 'react-router-dom';
+import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom';
 import './App.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 let Router = BrowserRouter;
+
+const Home = ({match}) => (
+    <p>Home: {match.params.id}</p>
+  )
 
 const PageFade = (props) => (
   <CSSTransition 
@@ -14,11 +18,6 @@ const PageFade = (props) => (
     unmountOnExit={true}
   />
 )
-
-const firstChild = props => {
-  const childrenArray = React.Children.toArray(props.children);
-  return childrenArray[0] || null;
-};
 
 let Mug = (props) => {
   let mugInfo = props.mugInformation;
@@ -54,7 +53,7 @@ let Mugs = (props) => {
 
 
 
-class App extends Component {
+class MugContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -76,6 +75,7 @@ componentDidMount() {
 	).then(
     data => {
       this.setState({loaded: true})
+      console.log(this.props.location);
     }
   );
 }
@@ -90,13 +90,30 @@ componentDidMount() {
           </header>
           <p className="App-intro">Welcome to React</p>
           <Mugs posts={this.state.posts} loaded={this.state.loaded} />
-            <div className="singleMug">
-            <Route path="/mugs/:id" render={(props) => (<MugPage mugNumber={props.match.params.id.substring(1)} mugInformation={this.state.posts[props.match.params.id.substring(1)]} loaded={this.state.loaded} {...props}/>)} />
-          </div>
+          
         </div>
       </Router>
     );
   }
+}
+
+// Fade applied to whole app since thats were the key is, Refactor the App
+
+const App = (props) => {
+  const locationKey = props.location.pathname;
+
+  return (
+    <div>
+    <TransitionGroup>
+    <PageFade key={locationKey}>
+    <Switch location={props.location}>
+            <Route path="/mugs/:id" component={Home}/>
+          </Switch>
+      </PageFade>
+    </TransitionGroup>
+    <MugContainer location={props.location}/>    
+    </div>      
+  )
 }
 
 const BasicExample = () => (
@@ -114,7 +131,7 @@ let MugPage = (props) => {
     )
   } else {
     return (
-      <NavLink to={"/mugs/:" + props.mugNumber}>
+      <NavLink to={"/mugs/:" + props.mugNumber} >
         <div className="mug mugPage">
           <img src={mugInfo._embedded["wp:featuredmedia"][0].source_url} alt=""/>
           <h1>{mugInfo.title.rendered}</h1>
@@ -127,4 +144,76 @@ let MugPage = (props) => {
   }
 }
 
-export default App;
+
+export default BasicExample;
+
+// import React from 'react'
+// import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
+// import { CSSTransition, TransitionGroup } from 'react-transition-group'
+// import './App.css';
+
+
+// const About = () => (
+//   <p>About</p>
+// )
+
+// const NotFound = () => (
+//   <p>404</p>
+// )
+
+// const Home = () => (
+//   <p>Home</p>
+// )
+
+
+// const PageFade = (props) => (
+//   <CSSTransition 
+//     {...props}
+//     classNames="fadeTranslate"
+//     timeout={1000}
+//     mountOnEnter={true}
+//     unmountOnExit={true}
+//   />
+// )
+
+// const Layout = ({ children }) => (
+//   <section>
+//     <nav>
+//       <ul>
+//         <li><Link to="/">Home</Link></li>
+//         <li><Link to="/about">About</Link></li>
+//         <li><Link to="/topics">Non existing</Link></li>
+//       </ul>
+//     </nav>
+//     <hr />
+//     {children}
+//   </section>
+// )
+
+// const App = (props) => {
+//   const locationKey = props.location.pathname
+
+//   return (
+//   <Layout>
+//     <TransitionGroup>
+//       <PageFade key={locationKey}>
+//         <section className="fix-container">
+//           <Switch location={props.location}>
+//             <Route exact path="/" component={Home} />
+//             <Route exact path="/about" component={About} />
+//             <Route component={NotFound} />
+//           </Switch>
+//         </section>
+//       </PageFade>
+//     </TransitionGroup>
+//   </Layout>
+//   )
+// }
+
+// const BasicExample = () => (
+//   <BrowserRouter>
+//     <Route path="/" component={App} />
+//   </BrowserRouter>
+// );
+
+// export default BasicExample;
